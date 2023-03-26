@@ -1,0 +1,9 @@
+{% extends 'support/base.html' %}
+{% load support_tags %}
+
+
+{% block content %}
+<ul class="list-articles">
+	{% show_posts cat_selected=cat_selected %}
+</ul>
+{% endblock %}
