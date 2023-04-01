@@ -76,14 +76,13 @@ ul.list-articles li {
 .clear {clear: both;}
 
 .header {
-	background: #3F4137;
+	background: #000000;
 	height: 60px;
 }
 
 .logo {
-	background: url('../images/logo.png') no-repeat 10px 5px;
-	width: 70px;
-	height: 60px;
+margin: 18px 40px 0 30px;
+
 }
 
 ul.mainmenu {
@@ -91,7 +90,7 @@ ul.mainmenu {
 	margin: 0;
 	padding: 0;
 	height: 60px;
-	color: #fdc073;
+	color: #ffffff;
 	font-size: 20px;
 	overflow: hidden;
 }
@@ -99,11 +98,11 @@ ul.mainmenu li {
 	float: left;
 	margin: 18px 40px 0 30px;
 }
-ul.mainmenu li.logo {margin: 0;}
+
 ul.mainmenu li.last {float: right;}
 
 ul.mainmenu li a {
-	color: #fdc073;
+	color: #ffffff;
 	text-decoration: none;
 }
 ul.mainmenu li a:hover {
@@ -356,7 +355,7 @@ ul.lang-list li a:hover {color: #fdc073;}
 #footer {
 	box-sizing: border-box;
 
-	background: #3F4137;
+	background: #000000;
 	padding: 5px;
 	color: #aaa;
 	font-size: 14px;

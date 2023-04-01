@@ -24,11 +24,13 @@ def show_categories(sort=None, cat_selected=0):
     return {"cats": cats, "cat_selected": cat_selected}
 
 @register.inclusion_tag('support/post_list.html')
+
 def show_posts( cat_selected=0):
+
     if cat_selected==0:
-        posts = Support.objects.all()
+        posts = Support.objects.filter(is_published=True)
     else:
-        posts = Support.objects.filter(cat_id=cat_selected)
+        posts = Support.objects.filter(cat_id=cat_selected,is_published=True)
 
 
     return {"posts": posts, "cat_selected": cat_selected}
