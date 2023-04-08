@@ -2,7 +2,7 @@ from django.contrib.auth import logout, login
 from django.contrib.auth.views import LoginView
 from django.core.paginator import Paginator
 from django.urls import reverse_lazy
-from django.views.generic import ListView, CreateView, DetailView
+from django.views.generic import ListView, CreateView, DetailView, FormView
 from django.http import HttpResponse, HttpResponseNotFound, HttpResponseForbidden, HttpResponseBadRequest, \
     HttpResponseServerError, Http404
 from django.shortcuts import render, redirect, get_object_or_404
@@ -32,7 +32,7 @@ class SupportHome(DataMixin, ListView):
     context_object_name = 'posts'
 
     def get_queryset(self):
-        return Support.objects.filter(is_published=True)
+        return Support.objects.filter(is_published=True).select_related('cat')
 
     def get_context_data(self, *, object_list=None, **kwargs):
         context = super().get_context_data(**kwargs)
@@ -77,8 +77,20 @@ class AddPage(LoginRequiredMixin,DataMixin,CreateView):
         return dict(list(context.items()) + list(c_def.items()))
 
 
-def contact(request):
-    return HttpResponse("Our contacts")
+class ContactFormView(DataMixin, FormView):
+    form_class = ContactForm
+    template_name = 'support/contact.html'
+    success_url = reverse_lazy('home')
+
+    def get_context_data(self, *, object_list=None, **kwargs):
+        context = super().get_context_data(**kwargs)
+        c_def = self.get_user_context(title="Contacts")
+        return dict(list(context.items()) + list(c_def.items()))
+
+    def form_valid(self, form):
+        print(form.cleaned_data)
+        return redirect('home')
+
 
 
 
@@ -129,12 +141,13 @@ class SupportCategory(DataMixin,ListView):
     allow_empty = False
 
     def get_queryset(self):
-        return Support.objects.filter(cat__slug=self.kwargs['cat_slug'], is_published=True)
+        return Support.objects.filter(cat__slug=self.kwargs['cat_slug'], is_published=True).select_related('cat')
 
     def get_context_data(self, *, object_list=None, **kwargs):
         context = super().get_context_data(**kwargs)
-        c_def = self.get_user_context(title='Category - ' + str(context['posts'][0].cat),
-                                      cat_selected=context['posts'][0].cat_id)
+        c= Category.objects.get(slug=self.kwargs['cat_slug'])
+        c_def = self.get_user_context(title='Category - ' + str(c.name),
+                                      cat_selected=c.pk)
         return dict(list(context.items()) + list(c_def.items()))
 
 

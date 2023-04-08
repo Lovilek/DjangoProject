@@ -17,7 +17,9 @@ from django.urls import path, include
 
 urlpatterns = [
     path('admin/', admin.site.urls),
-    path('',include('support.urls'))
+    path('captcha/', include('captcha.urls')),
+    path('',include('support.urls')),
+
 ]
 
 if settings.DEBUG:
