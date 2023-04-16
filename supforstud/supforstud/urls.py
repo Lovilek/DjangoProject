@@ -19,6 +19,8 @@ urlpatterns = [
     path('admin/', admin.site.urls),
     path('captcha/', include('captcha.urls')),
     path('',include('support.urls')),
+    path('api/v1/suplist/', SupportAPIView.as_view()),
+    path('api/v1/suplist/<int:pk>', SupportAPIView.as_view()),
 
 ]
 

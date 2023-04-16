@@ -1,3 +1,28 @@
-#header, .module caption  {
-    background: #5e3a00;
+#header, .module caption,.h1 {
+        background-image: url("https://images.unsplash.com/photo-1506318137071-a8e063b4bec0?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxleHBsb3JlLWZlZWR8MTF8fHxlbnwwfHx8fA%3D%3D&w=1000&q=80");
+        color: #f0f0f0;
+
+}
+#main{
+     background-image: url("https://images.unsplash.com/photo-1506318137071-a8e063b4bec0?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxleHBsb3JlLWZlZWR8MTF8fHxlbnwwfHx8fA%3D%3D&w=1000&q=80");
+}
+#footer {
+    clear: both;
+    margin: 0 auto;
+    text-align: center;
+    padding: 0px;
+}
+#site-name{
+    color: #f0f0f0;
+}
+#branding h1 a:visited{
+    color: #f0f0f0;
+}
+#content-related, .{
+    justify-content: right;
+    margin-right: 5px;
+
+}
+h1{
+    color: darkblue;
 }

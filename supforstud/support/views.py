@@ -1,3 +1,5 @@
+from django.forms import model_to_dict
+from rest_framework import generics
 from django.contrib.auth import logout, login
 from django.contrib.auth.views import LoginView
 from django.core.paginator import Paginator
@@ -7,10 +9,64 @@ from django.http import HttpResponse, HttpResponseNotFound, HttpResponseForbidde
     HttpResponseServerError, Http404
 from django.shortcuts import render, redirect, get_object_or_404
 from django.contrib.auth.mixins import LoginRequiredMixin
+from rest_framework.response import Response
+from rest_framework.views import APIView
 
 from .form import *
 from .models import *
+from .serializers import SupportSerializer
 from .utils import *
+
+class SupportAPIView(APIView):
+    def get(self, request):
+        s = Support.objects.all()
+        return Response({'posts': SupportSerializer(s, many=True).data})
+
+    def post(self, request):
+        serializer = SupportSerializer(data=request.data)
+        serializer.is_valid(raise_exception=True)
+        serializer.save()
+
+        return Response({'post': serializer.data})
+
+
+    def put(self, request, *args, **kwargs):
+        pk = kwargs.get("pk", None)
+        if not pk:
+            return Response({"error": "Method PUT not allowed"})
+
+        try:
+            instance = Support.objects.get(pk=pk)
+        except:
+            return Response({"error": "Object does not exists"})
+
+        serializer = SupportSerializer(data=request.data, instance=instance)
+        serializer.is_valid(raise_exception=True)
+        serializer.save()
+        return Response({"post": serializer.data})
+
+    def delete(self, request, *args, **kwargs):
+        pk = kwargs.get("pk", None)
+        if not pk:
+            return Response({"error": "Method DELETE not allowed"})
+
+
+        try:
+            instance = Support.objects.get(pk=pk)
+        except:
+            return Response({"error": "Object does not exists"})
+        instance.delete()
+
+
+        return Response({"post": "delete post " + str(pk)})
+
+
+
+
+# class SupportAPIView(generics.ListAPIView):
+#     queryset = Support.objects.all()
+#     serializer_class = SupportSerializer
+#
 
 
 
