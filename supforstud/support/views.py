@@ -1,5 +1,5 @@
 from django.forms import model_to_dict
-from rest_framework import generics
+from rest_framework import generics, viewsets
 from django.contrib.auth import logout, login
 from django.contrib.auth.views import LoginView
 from django.core.paginator import Paginator
@@ -9,59 +9,128 @@ from django.http import HttpResponse, HttpResponseNotFound, HttpResponseForbidde
     HttpResponseServerError, Http404
 from django.shortcuts import render, redirect, get_object_or_404
 from django.contrib.auth.mixins import LoginRequiredMixin
+from rest_framework.decorators import action
+from rest_framework.permissions import IsAuthenticated
 from rest_framework.response import Response
 from rest_framework.views import APIView
 
 from .form import *
 from .models import *
+from .permissions import IsAdminOrReadOnly
 from .serializers import SupportSerializer
 from .utils import *
 
-class SupportAPIView(APIView):
-    def get(self, request):
-
-        s = Support.objects.all()
-        return Response({'posts': SupportSerializer(s, many=True).data})
-
-    def post(self, request):
-        serializer = SupportSerializer(data=request.data)
-        serializer.is_valid(raise_exception=True)
-        serializer.save()
-
-        return Response({'post': serializer.data})
 
 
-    def put(self, request, *args, **kwargs):
-        pk = kwargs.get("pk", None)
+
+class SupportViewSet(viewsets.ModelViewSet):
+    # queryset = Support.objects.all()
+    serializer_class = SupportSerializer
+
+    def get_queryset(self):
+        pk = self.kwargs.get("pk")
+
         if not pk:
-            return Response({"error": "Method PUT not allowed"})
+            return Support.objects.all()
 
-        try:
-            instance = Support.objects.get(pk=pk)
-        except:
-            return Response({"error": "Object does not exists"})
-
-        serializer = SupportSerializer(data=request.data, instance=instance)
-        serializer.is_valid(raise_exception=True)
-        serializer.save()
-        return Response({"post": serializer.data})
-
-    def delete(self, request, *args, **kwargs):
-        pk = kwargs.get("pk", None)
-        if not pk:
-            return Response({"error": "Method DELETE not allowed"})
+        return Support.objects.filter(pk=pk)
 
 
-        try:
-            instance = Support.objects.get(pk=pk)
-        except:
-            return Response({"error": "Object does not exists"})
-        instance.delete()
+    @action(methods=['get'], detail=True)
+    def categorydetail(self, request, pk=None):
+        cats = Category.objects.get(pk=pk)
+        return Response({'cats': cats.name})
+
+    @action(methods=['get'], detail=False)
+    def category(self, request):
+        cats = Category.objects.all()
+        return Response({'cats': [c.name for c in cats]})
 
 
-        return Response({"post": "delete post " + str(pk)})
 
 
+
+
+
+
+
+
+class SupportAPIList(generics.ListCreateAPIView):
+    queryset = Support.objects.all()
+    serializer_class = SupportSerializer
+    permission_classes = (IsAuthenticated, )
+
+
+
+
+class SupportAPIUpdate(generics.UpdateAPIView):
+    queryset = Support.objects.all()
+    serializer_class = SupportSerializer
+
+
+class SupportAPIDetailView(generics.RetrieveUpdateDestroyAPIView):
+    queryset = Support.objects.all()
+    serializer_class = SupportSerializer
+    permission_classes = (IsAdminOrReadOnly, )
+
+
+
+class SupportAPIDestroy(generics.RetrieveDestroyAPIView):
+    queryset = Support.objects.all()
+    serializer_class = SupportSerializer
+
+
+
+
+
+
+
+
+# class SupportAPIView(APIView):
+#     def get(self, request):
+#
+#         s = Support.objects.all()
+#         return Response({'posts': SupportSerializer(s, many=True).data})
+#
+#     def post(self, request):
+#         serializer = SupportSerializer(data=request.data)
+#         serializer.is_valid(raise_exception=True)
+#         serializer.save()
+#
+#         return Response({'post': serializer.data})
+#
+#
+#     def put(self, request, *args, **kwargs):
+#         pk = kwargs.get("pk", None)
+#         if not pk:
+#             return Response({"error": "Method PUT not allowed"})
+#
+#         try:
+#             instance = Support.objects.get(pk=pk)
+#         except:
+#             return Response({"error": "Object does not exists"})
+#
+#         serializer = SupportSerializer(data=request.data, instance=instance)
+#         serializer.is_valid(raise_exception=True)
+#         serializer.save()
+#         return Response({"post": serializer.data})
+#
+#     def delete(self, request, *args, **kwargs):
+#         pk = kwargs.get("pk", None)
+#         if not pk:
+#             return Response({"error": "Method DELETE not allowed"})
+#
+#
+#         try:
+#             instance = Support.objects.get(pk=pk)
+#         except:
+#             return Response({"error": "Object does not exists"})
+#         instance.delete()
+#
+#
+#         return Response({"post": "delete post " + str(pk)})
+#
+#
 
 
 # class SupportAPIView(generics.ListAPIView):
@@ -87,6 +156,8 @@ class SupportHome(DataMixin, ListView):
     model = Support
     template_name = 'support/home.html'
     context_object_name = 'posts'
+    permission_classes = (IsAdminOrReadOnly, )
+
 
     def get_queryset(self):
         return Support.objects.filter(is_published=True).select_related('cat')
@@ -128,6 +199,7 @@ class AddPage(LoginRequiredMixin,DataMixin,CreateView):
     login_url = reverse_lazy('home')
     raise_exception = True
 
+
     def get_context_data(self, *, object_list=None, **kwargs):
         context = super().get_context_data(**kwargs)
         c_def = self.get_user_context(title="Add page")
@@ -138,6 +210,8 @@ class ContactFormView(DataMixin, FormView):
     form_class = ContactForm
     template_name = 'support/contact.html'
     success_url = reverse_lazy('home')
+    permission_classes = (IsAuthenticated, )
+
 
     def get_context_data(self, *, object_list=None, **kwargs):
         context = super().get_context_data(**kwargs)

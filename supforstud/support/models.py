@@ -1,4 +1,6 @@
 from django.db import models
+from django.contrib.auth.models import User
+
 
 from django.urls import reverse
 
@@ -12,6 +14,8 @@ class Support(models.Model):
     time_update = models.DateTimeField(auto_now=True,verbose_name="Time update")
     is_published = models.BooleanField(default=True,verbose_name="Publication")
     cat = models.ForeignKey('Category', on_delete=models.PROTECT, null=True,verbose_name="Category")
+    user = models.ForeignKey(User, verbose_name='User', on_delete=models.CASCADE)
+
 
 
 
