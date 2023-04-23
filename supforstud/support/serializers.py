@@ -22,6 +22,7 @@ class SupportSerializer(serializers.Serializer):
 
 
     def create(self, validated_data):
+
         return Support.objects.create(**validated_data)
 
     def update(self, instance, validated_data):

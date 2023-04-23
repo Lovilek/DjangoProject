@@ -19,6 +19,7 @@ from .utils import *
 
 class SupportAPIView(APIView):
     def get(self, request):
+
         s = Support.objects.all()
         return Response({'posts': SupportSerializer(s, many=True).data})
 
