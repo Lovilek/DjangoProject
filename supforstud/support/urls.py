@@ -7,13 +7,12 @@ from .views import *
 urlpatterns = [
     # path('',cache_page(60)(SupportHome.as_view()),name='home'),
     # path('category/<slug:cat_slug>/',cache_page(60)(SupportCategory.as_view()),name='category'),
-
-    path('', SupportHome.as_view(),name='home'),
-    path('about/',about,name='about'),
+    path('home/', SupportHome.as_view(), name='home'),
+    path('about/', AboutUs.as_view(), name='about'),
     path('news/', news, name='news'),
     path('addpage/', AddPage.as_view(), name='add_page'),
     path('contact/', ContactFormView.as_view(), name='contact'),
-    path('login/', LoginUser.as_view(), name='login'),
+    path('', LoginUser.as_view(), name='login'),
     path('logout/', logout_user, name='logout'),
     path('register/', RegisterUser.as_view(), name='register'),
     path('post/<slug:post_slug>/', ShowPost.as_view(), name='post'),
@@ -21,12 +20,10 @@ urlpatterns = [
 
 ]
 
-
 if settings.DEBUG:
     urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
 
-
-handler404=pageNotFound
-handler403=Forbidden
-handler400=BadRequest
-handler500=ServerError
+handler404 = pageNotFound
+handler403 = Forbidden
+handler400 = BadRequest
+handler500 = ServerError

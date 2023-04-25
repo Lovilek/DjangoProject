@@ -10,28 +10,10 @@ class SupportSerializer(serializers.ModelSerializer):
         model = Support
         fields = "__all__"
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 # class SupportModel:
 #     def __init__(self, title, content):
 #         self.title = title
 #         self.content = content
-
 
 
 # class SupportSerializer(serializers.Serializer):
@@ -78,4 +60,3 @@ class SupportSerializer(serializers.ModelSerializer):
 #     serializer = SupportSerializer(data=data)
 #     serializer.is_valid()
 #     print(serializer.validated_data)
-

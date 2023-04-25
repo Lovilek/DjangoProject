@@ -12,6 +12,7 @@ from django.urls import path
 
 from supforstud import settings
 from support.views import *
+from rest_framework_simplejwt.views import TokenObtainPairView, TokenRefreshView, TokenVerifyView
 
 from django.urls import path, include
 
@@ -31,24 +32,21 @@ class MyCustomRouter(routers.SimpleRouter):
     ]
 
 
-
-
 router = routers.DefaultRouter()
-router.register(r'support', SupportViewSet,basename='support')
+router.register(r'support', SupportViewSet, basename='support')
 print(router.urls)
-
-
-
 
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('captcha/', include('captcha.urls')),
-    path('',include('support.urls')),
-    # path('api/v1/', include(router.urls)),
-    path('api/v1/support/', SupportAPIList.as_view()),
-    path('api/v1/support/<int:pk>/', SupportAPIDetailView.as_view()),
-    path('api/v1/supportdelete/<int:pk>/', SupportAPIDestroy.as_view()),
-
+    path('', include('support.urls')),
+    path('api/v1/', include(router.urls)),
+    path('api/v1/token/', TokenObtainPairView.as_view(), name='token_obtain_pair'),
+    path('api/v1/token/refresh/', TokenRefreshView.as_view(), name='token_refresh'),
+    path('api/v1/token/verify/', TokenVerifyView.as_view(), name='token_verify'),
+    # path('api/v1/support/', SupportAPIList.as_view()),
+    # path('api/v1/support/<int:pk>/', SupportAPIDetailView.as_view()),
+    # path('api/v1/supportdelete/<int:pk>/', SupportAPIDestroy.as_view()),
     # path('api/v1/suplist/<int:pk>', SupportAPIList.as_view()),
     # path('api/v1/supdetail/<int:pk>/', SupportAPIDetailView.as_view()),
 
@@ -58,10 +56,7 @@ if settings.DEBUG:
     import debug_toolbar
 
     urlpatterns = [
-        path('__debug__/', include(debug_toolbar.urls)),
-    ] + urlpatterns
+                      path('__debug__/', include(debug_toolbar.urls)),
+                  ] + urlpatterns
 
     urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
-
-
-

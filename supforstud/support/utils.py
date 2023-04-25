@@ -3,13 +3,13 @@ from django.core.cache import cache
 from .models import *
 
 menu = [{'title': "About us", 'url_name': 'about'},
-        {'title': "Add page", 'url_name': 'add_page'},
         {'title': "Contacts", 'url_name': 'contact'},
-]
+        ]
+
 
 class DataMixin:
-
     paginate_by = 2
+
     def get_user_context(self, **kwargs):
 
         context = kwargs
@@ -19,9 +19,6 @@ class DataMixin:
         # if not cats:
         #     cats=Category.objects.annotate(Count('support'))
         #     cache.set('cats',cats,60)
-
-
-
 
         user_menu = menu.copy()
         if not self.request.user.is_authenticated:
