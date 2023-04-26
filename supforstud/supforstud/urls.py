@@ -38,6 +38,7 @@ print(router.urls)
 
 urlpatterns = [
     path('admin/', admin.site.urls),
+    path('contact/',sendEmail,name='contact'),
     path('captcha/', include('captcha.urls')),
     path('', include('support.urls')),
     path('api/v1/', include(router.urls)),

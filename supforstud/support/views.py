@@ -1,4 +1,6 @@
+from django.core.mail import send_mail
 from django.forms import model_to_dict
+from django.template.loader import render_to_string
 from rest_framework import generics, viewsets
 from django.contrib.auth import logout, login
 from django.contrib.auth.views import LoginView
@@ -74,7 +76,6 @@ class SupportHome(LoginRequiredMixin, DataMixin, ListView):
     context_object_name = 'posts'
     permission_required = ('admin')
 
-
     def get_queryset(self):
         return Support.objects.filter(is_published=True).select_related('cat')
 
@@ -93,7 +94,10 @@ class AboutUs(DataMixin, ListView):
 
     def get_context_data(self, *, object_list=None, **kwargs):
         c_def = self.get_user_context(title="About Us")
-        return dict(list(c_def.items()))
+        return ({
+            'menu': menu,
+            'title': 'About us',
+        })
 
 
 def news(request):
@@ -105,7 +109,6 @@ class AddPage(LoginRequiredMixin, DataMixin, CreateView):
     template_name = 'support/addpage.html'
     success_url = reverse_lazy('home')
     login_url = reverse_lazy('home')
-    permission_required = ('admin')
     raise_exception = True
 
     def get_context_data(self, *, object_list=None, **kwargs):
@@ -114,28 +117,12 @@ class AddPage(LoginRequiredMixin, DataMixin, CreateView):
         return dict(list(context.items()) + list(c_def.items()))
 
 
-class ContactFormView(DataMixin, FormView):
-    form_class = ContactForm
-    template_name = 'support/contact.html'
-    success_url = reverse_lazy('home')
-
-    def get_context_data(self, *, object_list=None, **kwargs):
-        context = super().get_context_data(**kwargs)
-        c_def = self.get_user_context(title="Contacts")
-        return dict(list(context.items()) + list(c_def.items()))
-
-    def form_valid(self, form):
-        print(form.cleaned_data)
-        return redirect('home')
-
-
 class ShowPost(LoginRequiredMixin, DataMixin, DetailView):
     model = Support
     template_name = 'support/post.html'
     slug_url_kwarg = 'post_slug'
     context_object_name = 'post'
     permission_required = ('admin')
-
 
     def get_context_data(self, *, object_list=None, **kwargs):
         context = super().get_context_data(**kwargs)
@@ -194,6 +181,51 @@ class LoginUser(DataMixin, LoginView):
 def logout_user(request):
     logout(request)
     return redirect('login')
+
+
+def sendEmail(request):
+    if request.method == 'POST':
+        form = ContactForm(request.POST)
+
+        if form.is_valid():
+            name = form.cleaned_data['name']
+            email = form.cleaned_data['email']
+            content = form.cleaned_data['content']
+
+            html = render_to_string('support/contactform.html', {
+                'name': name,
+                'email': email,
+                'content': content
+            })
+
+            send_mail('The contact form subject', 'This is the message', 'noreply@codewithstein.com',
+                      ['wingeddemon2274@gmail.com'], html_message=html)
+
+            return redirect('contact')
+    else:
+        form = ContactForm()
+
+    return render(request, 'support/contact.html', {
+        'form': form,
+        'menu': menu,
+        'title': 'Contacts',
+    })
+
+
+# class ContactFormView(DataMixin, FormView):
+#     form_class = ContactForm
+#     template_name = 'support/contact.html'
+#     success_url = reverse_lazy('home')
+#
+# def get_context_data(self, *, object_list=None, **kwargs):
+#         context = super().get_context_data(**kwargs)
+#         c_def = self.get_user_context(title="Contacts")
+#         return dict(list(context.items()) + list(c_def.items()))
+#
+#     def form_valid(self, form):
+#         print(form.cleaned_data)
+#         return redirect('home')
+#
 
 
 def pageNotFound(request, exception):
@@ -313,8 +345,3 @@ def ServerError(request):
 #     contact_list = Support.objects.all()
 #
 #     return render(request, 'support/aboutUs.html', {'menu': menu, 'title': 'About'})
-
-
-
-
-

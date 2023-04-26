@@ -29,6 +29,12 @@ ALLOWED_HOSTS = ['127.0.0.1']
 
 # Application definition
 
+
+EMAIL_HOST = 'sandbox.smtp.mailtrap.io'
+EMAIL_HOST_USER = '94261b6cabd126'
+EMAIL_HOST_PASSWORD = '82df2e5c612556'
+EMAIL_PORT = '2525'
+
 INSTALLED_APPS = [
     'django.contrib.admin',
     'django.contrib.auth',
@@ -41,7 +47,6 @@ INSTALLED_APPS = [
     'support.apps.SupportConfig',
     'rest_framework',
     'rest_framework_simplejwt',
-
 ]
 
 MIDDLEWARE = [
