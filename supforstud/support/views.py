@@ -96,7 +96,7 @@ class AboutUs(DataMixin, ListView):
         c_def = self.get_user_context(title="About Us")
         return ({
             'menu': menu,
-            'title': 'About us',
+            'title': 'About us Page',
         })
 
 
@@ -104,12 +104,13 @@ def news(request):
     return render(request, 'support/news.html', {'menu': menu, 'title': 'News'})
 
 
-class AddPage(LoginRequiredMixin, DataMixin, CreateView):
+class AddPage(PermissionRequiredMixin, DataMixin, CreateView):
     form_class = AddPostForm
     template_name = 'support/addpage.html'
     success_url = reverse_lazy('home')
     login_url = reverse_lazy('home')
     raise_exception = True
+    permission_required = 'superuser'
 
     def get_context_data(self, *, object_list=None, **kwargs):
         context = super().get_context_data(**kwargs)
