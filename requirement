@@ -1,0 +1,5 @@
+pip install django_debug_toolbar
+pip install  django-simple-captcha
+pip install  django-captcha
+pip install djangorestframework
+pip install --upgrade djangorestframework-simplejwt
