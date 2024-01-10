@@ -1,3 +1,9 @@
+![image](https://github.com/Lovilek/DjangoProject/assets/105930858/a0d1280f-cc84-4108-9bc7-c0a9e2861f0c)
+![image](https://github.com/Lovilek/DjangoProject/assets/105930858/7f7c4f4f-a024-474b-84c5-8e5ef5fd54f4)
+![image](https://github.com/Lovilek/DjangoProject/assets/105930858/8aea4758-d727-415e-9321-ba6074558e0a)
+
+
+
 ![image](https://user-images.githubusercontent.com/105930858/234933189-098af247-0dd5-45f4-a160-7854cdd41c43.png)
 # Django project Support For Students
 a web application written in django that called Support For Students 
