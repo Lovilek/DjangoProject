@@ -24,4 +24,25 @@ An ordinary user can only view information and the ability to send a message abo
 The admin has full control over the posts and content of the site using the admin panel.
 
 
+Платформа для поиска университетов, стажировок и вакансий
+
+Описание: Создал полностью функциональный веб-портал,
+позволяющий пользователям искать образовательные учреждения
+и стажировки.
+
+Технологии: Python, Django, SQL, HTML, CSS, Bootstrap, Git,
+Heroku.
+Задачи:
+
+Разработка и интеграция бэкенда с использованием Flask и
+SQL для управления данными пользователей и списками
+вакансий.
+
+Создание адаптивного пользовательского интерфейса с
+использованием HTML, CSS и Bootstrap.
+
+Развертывание приложения на Heroku с использованием Git
+для управления версиями кода.
+
+
 
