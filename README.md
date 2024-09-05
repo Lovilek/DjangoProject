@@ -23,7 +23,7 @@ password:!qwer1234
 An ordinary user can only view information and the ability to send a message about complaints to the mail.
 The admin has full control over the posts and content of the site using the admin panel.
 
-##Описание
+## Описание
 Платформа для поиска университетов, стажировок и вакансий
 
 Описание: Создал полностью функциональный веб-портал,
